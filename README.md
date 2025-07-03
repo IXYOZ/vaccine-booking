@@ -1,10 +1,24 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+# Vaccine Booking System
+
+
+## 🔧 Technology
+- Next.js (App Router)
+- TailwindCSS
+- Prisma + SQLite (หรือ PostgreSQL)
+- TypeScript
+
+
+
+npm run dev
+
 ## Getting Started
 
 First, run the development server:
 
 ```bash
+npm install
 npm run dev
 # or
 yarn dev

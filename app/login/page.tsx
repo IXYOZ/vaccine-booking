@@ -6,14 +6,16 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const router = useRouter();
   const [phone, setPhone] = useState("");
+  const [name, setName] = useState("")
   const [msg, setMsg] = useState("");
+  const [role, setRole] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone }),
+      body: JSON.stringify({ phone,name }),
     });
     const text = await res.text()
     let data;
@@ -24,11 +26,21 @@ export default function LoginPage() {
       data ={}
     }
     if (res.ok) {
-      setMsg(data.message || "Login successfull");
-      localStorage.setItem("phone",phone) // Display OTP mock then redirect
+      localStorage.clear();
+      localStorage.setItem("name",data.name)
+      localStorage.setItem("phone",data.phone) // Display OTP mock then redirect
+      localStorage.setItem("role",data.role)
+      
+      if(data.role === "admin"){
+        router.push("/admin")
+        }else{
+          router.push("/dashboard");
+          
+          }
 
-      router.push("/dashboard");
-
+    } else if (res.status === 404) {
+      alert("User not found. Redirecting to register...");
+      router.push(`/register?phone=${phone}`);
     } else {
       alert(data.message || "Login failed");
     }

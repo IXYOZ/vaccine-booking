@@ -8,42 +8,69 @@ import { set } from 'date-fns'
 
 export default function BookingPage() {
     const router = useRouter()
-    const [successMsg, setSuccessMsg] = useState('')
+    const [isSelf,setIsSelf] = useState(true)
     const [form,setForm] = useState({
     name:'',
     datetime:'',
     phone:'',
     note:'',
   })
+  useEffect(() => {
+    const askBookingFor = async () => {
+      // const isSelf = window.confirm("are you want to booking for yourself?");
+      if (isSelf) {
+        const name = localStorage.getItem("name") || "";
+        const phone = localStorage.getItem("phone") || "";
+        setForm((prev) => ({ ...prev, name, phone }));
+      } else {
+        setForm((prev) => ({ ...prev, name: '', phone: '' }));
+      }
+    };
+    // askBookingFor();
+  }, [isSelf]);
+
   const handleChange =(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
         setForm({ ...form, [e.target.name]: e.target.value})
   }
-  const handleSubmit = async(e: React.FormEvent)=>{
-    e.preventDefault()
-
-    const res = await fetch('/api/booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'  // ✅ ใช้ C ใหญ่ ถูกต้อง
-        },
-        body: JSON.stringify(form),
-      })
-    
-    const data = await res.json()
-    if (res.status === 201){
-      setSuccessMsg(data.message) // ถ้ามี message กลับมา
-      console.log('Response',data)
-      router.push('/dashboard')
-    }else{
-      alert(data.message || 'Error occurred')
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { name, phone, datetime, note } = form;
+  
+    console.log("Submitting:", { name, phone, datetime, note });
+  
+    const res = await fetch("/api/booking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, datetime, note }),
+    });
+  
+    const data = await res.json();
+    console.log("Response:", data);
+  
+    if (res.ok) {
+      localStorage.setItem("name", name);
+      localStorage.setItem("phone", phone);
+      await router.push("/dashboard");
+    } else {
+      alert("Registration/Booking failed: " + data.message);
     }
-    
-  }
+  };
   
 
   return (
     <div className="max-w-xl mx-auto p-6 text-white">
         <h1 className="text-2xl font-bold mb-4">Book a Vaccine Appointment</h1>
+      {/* Toggle */}
+      <div className="flex items-center space-x-2 mb-4">
+        <label className="text-white font-medium">For yourself</label>
+        <input
+          type="checkbox"
+          checked={isSelf}
+          onChange={(e) => setIsSelf(e.target.checked)}
+          className="w-5 h-5"
+        />
+      </div>
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"

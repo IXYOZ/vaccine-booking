@@ -16,8 +16,8 @@ export default function BookingPage() {
     phone:'',
     note:'',
   })
-  const storePhone = localStorage.getItem("phone") || "";
   useEffect(() => {
+    const storePhone = localStorage.getItem("phone") || "";
     const name = localStorage.getItem("name") || "";
 
     if(storePhone) setPhone(storePhone)
@@ -91,7 +91,7 @@ export default function BookingPage() {
           type="tel"
           name="phone"
           placeholder="Phone number"
-          value={phone &&storePhone || form.phone}
+          value={form.phone}
           onChange={handleChange}
           className="w-full p-2 bg-black border border-gray-500 rounded"
         />

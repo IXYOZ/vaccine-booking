@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const searchParams = useSearchParams()
-  const initialPhone = searchParams.get("phone") || ""
+  // const searchParams = useSearchParams()
+  // const initialPhone = searchParams.get('phone') || ''
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 

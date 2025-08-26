@@ -8,7 +8,8 @@
     "db:seed": "ts-node prisma/seed.tsx",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",

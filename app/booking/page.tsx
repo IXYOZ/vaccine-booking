@@ -9,19 +9,22 @@ import { set } from 'date-fns'
 export default function BookingPage() {
     const router = useRouter()
     const [isSelf,setIsSelf] = useState(true)
+    const [phone, setPhone] = useState<string>()
     const [form,setForm] = useState({
     name:'',
     datetime:'',
     phone:'',
     note:'',
   })
+  const storePhone = localStorage.getItem("phone") || "";
   useEffect(() => {
+    const name = localStorage.getItem("name") || "";
+
+    if(storePhone) setPhone(storePhone)
     const askBookingFor = async () => {
       // const isSelf = window.confirm("are you want to booking for yourself?");
       if (isSelf) {
-        const name = localStorage.getItem("name") || "";
-        const phone = localStorage.getItem("phone") || "";
-        setForm((prev) => ({ ...prev, name, phone }));
+        setForm((prev) => ({ ...prev, name, phone: storePhone }));
       } else {
         setForm((prev) => ({ ...prev, name: '', phone: '' }));
       }
@@ -38,7 +41,7 @@ export default function BookingPage() {
   
     console.log("Submitting:", { name, phone, datetime, note });
   
-    const res = await fetch("/api/booking", {
+    const res = await fetch("/api/mock-booking", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, phone, datetime, note }),
@@ -50,7 +53,7 @@ export default function BookingPage() {
     if (res.ok) {
       localStorage.setItem("name", name);
       localStorage.setItem("phone", phone);
-      await router.push("/dashboard");
+      await router.push("/login");
     } else {
       alert("Registration/Booking failed: " + data.message);
     }
@@ -59,6 +62,7 @@ export default function BookingPage() {
 
   return (
     <div className="max-w-xl mx-auto p-6 text-white">
+      {!phone && <p className='text-sm text-red-500'>Not member? we'll register you automatically!</p>}
         <h1 className="text-2xl font-bold mb-4">Book a Vaccine Appointment</h1>
       {/* Toggle */}
       <div className="flex items-center space-x-2 mb-4">
@@ -87,7 +91,7 @@ export default function BookingPage() {
           type="tel"
           name="phone"
           placeholder="Phone number"
-          value={form.phone}
+          value={phone &&storePhone || form.phone}
           onChange={handleChange}
           className="w-full p-2 bg-black border border-gray-500 rounded"
         />
@@ -116,7 +120,7 @@ export default function BookingPage() {
             setForm({
               name: '',
               datetime: '',
-              phone: '',
+              phone:'',
               note: '',
             })
           }

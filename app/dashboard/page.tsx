@@ -39,7 +39,7 @@ export default function DashboardPage() {
 
     const fetchBookings = async () => {
       const queryParam = storedRole === "admin"? "?role=admin":`?phone=${storedPhone}`;
-      const res = await fetch(`/api/booking${queryParam}`)
+      const res = await fetch(`/api/mock-booking${queryParam}`)
       const data = await res.json();
       setBookings(data.bookings || []);
     };
@@ -51,7 +51,7 @@ export default function DashboardPage() {
     const confirmed = confirm("Are you sure want to cancel this booking?");
     if (!confirmed) return;
 
-    const res = await fetch(`/api/booking/${id}`, {
+    const res = await fetch(`/api/mock-booking/${id}`, {
       method: "DELETE",
     });
 

@@ -37,7 +37,7 @@ export default function TimeTable({
       const start = days[0].toISOString();
       const end = days[days.length - 1].toISOString();
 
-      const res = await fetch(`/api/booked-slots?start=${start}&end=${end}`);
+      const res = await fetch(`/api/mock-slots?start=${start}&end=${end}`);
       const data = await res.json();
       if (Array.isArray(data.slots)) {
         const cleaned = data.slots.map(
